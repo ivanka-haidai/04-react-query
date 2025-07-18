@@ -12,18 +12,18 @@ interface TMDBSearchResponse {
 }
 
 
-export async function fetchMovies(query: string): Promise<Movie[]> {
+export async function fetchMovies(query: string, page: number ): Promise<TMDBSearchResponse> {
   const response = await axios.get<TMDBSearchResponse>(BASE_URL, {
     params: {
       query,
       include_adult: false,
       language: 'en-US',
-      page: 1,
+      page,
     },
     headers: {
       Authorization: `Bearer ${import.meta.env.VITE_TMDB_TOKEN}`,
     },
   });
 
-  return response.data.results;
+  return response.data;
 }
