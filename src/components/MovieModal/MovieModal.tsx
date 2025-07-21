@@ -65,5 +65,5 @@ export default function MovieModal({ movie, onClose }: MovieModalProps) {
     </div>
   );
 
-  return createPortal(modalElement, document.getElementById('modal-root')!);
+  return createPortal(modalElement, document.body);
 }
