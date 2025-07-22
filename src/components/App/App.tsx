@@ -1,11 +1,11 @@
-import { useState } from 'react';
+import { useState, useRef, useEffect } from 'react';
 import SearchBar from '../SearchBar/SearchBar';
 import MovieGrid from '../MovieGrid/MovieGrid';
 import MovieModal from '../MovieModal/MovieModal';
 import ErrorMessage from '../ErrorMessage/ErrorMessage';
 import { fetchMovies } from '../../services/movieService';
 import type { Movie } from '../../types/movie';
-import toast from 'react-hot-toast';
+import { toast , Toaster } from 'react-hot-toast';
 import Loader from '../Loader/Loader';
 import ReactPaginate from 'react-paginate';
 import { useQuery } from '@tanstack/react-query';
@@ -46,8 +46,25 @@ function App() {
     setSelectedMovie(null);
   };
 
+  const prevQuery = useRef('');
+
+useEffect(() => {
+  if (!isSuccess || !data) return;
+
+  if (data.results.length === 0) {
+    toast.error('No movies found for your request.');
+  }
+
+  if (prevQuery.current !== query && data.results.length > 0) {
+    toast.success('Movies found successfully!');
+  }
+
+  prevQuery.current = query;
+}, [isSuccess, data, query]);
+
   return (
     <>
+      <Toaster position="bottom-center" />
       <SearchBar onSubmit={handleSearch} />
 
       {isLoading && <Loader />}
